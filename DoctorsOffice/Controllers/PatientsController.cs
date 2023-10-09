@@ -34,5 +34,11 @@ public class PatientsController : Controller
       _db.SaveChanges();
       return RedirectToAction("Index");
     }
+
+    public ActionResult Details(int id)
+    {
+      Patient thisPatient = _db.Patients.FirstOrDefault(patient => patient.PatientId == id);
+      return View(thisPatient);
+    }
   }
 }

@@ -1,0 +1,12 @@
+@{
+  Layout = "_Layout";
+}
+
+@model DoctorsOffice.Models.Patient;
+
+<h2>Patient Details</h2>
+<hr />
+<h3>@Html.DisplayNameFor(model => model.Name): @Html.DisplayFor(model => model.Name)</h3>
+<h3>@Html.DisplayNameFor(model => model.BirthDate): @Html.DisplayFor(model => model.BirthDate)</h3>
+
+<p>@Html.ActionLink("Back to patients list", "Index")</p>
