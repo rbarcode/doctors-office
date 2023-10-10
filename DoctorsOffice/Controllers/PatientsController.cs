@@ -37,7 +37,10 @@ namespace DoctorsOffice.Controllers
 
     public ActionResult Details(int id)
     {
-      Patient thisPatient = _db.Patients.FirstOrDefault(patient => patient.PatientId == id);
+      Patient thisPatient = _db.Patients
+                                .Include(patient => patient.JoinEntities)
+                                .ThenInclude(join => join.Doctor)
+                                .FirstOrDefault(patient => patient.PatientId == id);
       string convertedBdate = thisPatient.BirthDate.ToString("dd/MM/yyyy");
       ViewBag.Bday = convertedBdate;
       return View(thisPatient);
@@ -64,14 +67,43 @@ namespace DoctorsOffice.Controllers
       return View(thisPatient);
     }
 
-    [HttpPost, ActionName("Delete")] 
+    [HttpPost, ActionName("Delete")]
     public ActionResult DeleteConfirmed(int id)
     {
       Patient thisPatient = _db.Patients.FirstOrDefault(patient => patient.PatientId == id);
       _db.Patients.Remove(thisPatient);
       _db.SaveChanges();
       return RedirectToAction("Index");
+    }
 
+    public ActionResult AddDoctor(int id)
+    {
+      Patient thisPatient = _db.Patients.FirstOrDefault(patients => patients.PatientId == id);
+      ViewBag.DoctorId = new SelectList(_db.Doctors, "DoctorId", "Name");
+      return View(thisPatient);
+    }
+
+    [HttpPost]
+    public ActionResult AddDoctor(Patient patient, int doctorId)
+    {
+#nullable enable
+      DoctorPatient? joinEntity = _db.DoctorPatients.FirstOrDefault(join => (join.DoctorId == doctorId && join.PatientId == patient.PatientId));
+#nullable disable
+      if (joinEntity == null && doctorId != 0)
+      {
+        _db.DoctorPatients.Add(new DoctorPatient() { DoctorId = doctorId, PatientId = patient.PatientId });
+        _db.SaveChanges();
+      }
+      return RedirectToAction("Details", new { id = patient.PatientId });
+    }
+
+    [HttpPost]
+    public ActionResult DeleteJoin(int joinId)
+    {
+      DoctorPatient joinEntry = _db.DoctorPatients.FirstOrDefault(join => join.DoctorPatientId == joinId);
+      _db.DoctorPatients.Remove(joinEntry);
+      _db.SaveChanges();
+      return RedirectToAction("Index");
     }
   }
 }

@@ -3,12 +3,33 @@
 }
 
 @model DoctorsOffice.Models.Patient;
+@using DoctorsOffice.Models;
 
 <h2>Patient Details</h2>
 <hr />
 <h3>@Html.DisplayNameFor(model => model.Name): @Html.DisplayFor(model => model.Name)</h3>
 <h3>@Html.DisplayNameFor(model => model.BirthDate): @ViewBag.Bday</h3>
 
+@if (@Model.JoinEntities.Count == 0)
+{
+  <p>This patient does not have any doctor.</p>
+}
+else
+{
+  <h4>This patient has the following doctor(s):</h4>
+  <ul>
+    @foreach (DoctorPatient join in Model.JoinEntities)
+    {
+      <li>Doctor: @join.Doctor.Name</li>
+      @using (Html.BeginForm("DeleteJoin", "Patients"))
+      {
+        @Html.Hidden("joinId", @join.DoctorPatientId)
+        <input type="submit" value="Delete" />
+      }
+    }
+  </ul>
+}
+<p>@Html.ActionLink("Add doctor", "AddDoctor", new { id = Model.PatientId })</p>
 <p>@Html.ActionLink("Edit patient info", "Edit", new { id = Model.PatientId })</p>
-<p>@Html.ActionLink("Back to patients list", "Index")</p>
 <p>@Html.ActionLink("Kill a patient", "Delete", new { id = Model.PatientId })</p>
+<p>@Html.ActionLink("Back to patients list", "Index")</p>

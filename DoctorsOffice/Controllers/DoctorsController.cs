@@ -79,6 +79,7 @@ namespace DoctorsOffice.Controllers
       ViewBag.PatientId = new SelectList(_db.Patients, "PatientId", "Name");
       return View(thisDoctor);
     }
+    
     [HttpPost]
     public ActionResult AddPatient(Doctor doctor, int patientId)
     {
