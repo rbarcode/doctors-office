@@ -5,10 +5,10 @@ using DoctorsOffice.Models;
 using System.Linq;
 using System.Collections.Generic;
 
-namespace DoctorsOffice.AddControllersWithViews
+namespace DoctorsOffice.Controllers
 {
-public class PatientsController : Controller
-{
+  public class PatientsController : Controller
+  {
     private readonly DoctorsOfficeContext _db;
 
     public PatientsController(DoctorsOfficeContext db)
@@ -28,7 +28,7 @@ public class PatientsController : Controller
     }
 
     [HttpPost]
-    public ActionResult Create (Patient patient)
+    public ActionResult Create(Patient patient)
     {
       _db.Patients.Add(patient);
       _db.SaveChanges();
@@ -38,7 +38,40 @@ public class PatientsController : Controller
     public ActionResult Details(int id)
     {
       Patient thisPatient = _db.Patients.FirstOrDefault(patient => patient.PatientId == id);
+      string convertedBdate = thisPatient.BirthDate.ToString("dd/MM/yyyy");
+      ViewBag.Bday = convertedBdate;
       return View(thisPatient);
+    }
+
+    public ActionResult Edit(int id)
+    {
+      Patient thisPatient = _db.Patients.FirstOrDefault(patient => patient.PatientId == id);
+
+      return View(thisPatient);
+    }
+
+    [HttpPost]
+    public ActionResult Edit(Patient patient)
+    {
+      _db.Patients.Update(patient);
+      _db.SaveChanges();
+      return RedirectToAction("Index");
+    }
+
+    public ActionResult Delete(int id)
+    {
+      Patient thisPatient = _db.Patients.FirstOrDefault(patient => patient.PatientId == id);
+      return View(thisPatient);
+    }
+
+    [HttpPost, ActionName("Delete")] 
+    public ActionResult DeleteConfirmed(int id)
+    {
+      Patient thisPatient = _db.Patients.FirstOrDefault(patient => patient.PatientId == id);
+      _db.Patients.Remove(thisPatient);
+      _db.SaveChanges();
+      return RedirectToAction("Index");
+
     }
   }
 }
