@@ -3,6 +3,7 @@ using System;
 using DoctorsOffice.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DoctorsOffice.Migrations
 {
     [DbContext(typeof(DoctorsOfficeContext))]
-    partial class DoctorsOfficeContextModelSnapshot : ModelSnapshot
+    [Migration("20231010222019_RequireNamesForPatientAndDoctor")]
+    partial class RequireNamesForPatientAndDoctor
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -55,27 +57,6 @@ namespace DoctorsOffice.Migrations
                     b.ToTable("DoctorPatients");
                 });
 
-            modelBuilder.Entity("DoctorsOffice.Models.DoctorSpecialty", b =>
-                {
-                    b.Property<int>("DoctorSpecialtyId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<int>("DoctorId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("SpecialtyId")
-                        .HasColumnType("int");
-
-                    b.HasKey("DoctorSpecialtyId");
-
-                    b.HasIndex("DoctorId");
-
-                    b.HasIndex("SpecialtyId");
-
-                    b.ToTable("DoctorSpecialties");
-                });
-
             modelBuilder.Entity("DoctorsOffice.Models.Patient", b =>
                 {
                     b.Property<int>("PatientId")
@@ -92,20 +73,6 @@ namespace DoctorsOffice.Migrations
                     b.HasKey("PatientId");
 
                     b.ToTable("Patients");
-                });
-
-            modelBuilder.Entity("DoctorsOffice.Models.Specialty", b =>
-                {
-                    b.Property<int>("SpecialtyId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("longtext");
-
-                    b.HasKey("SpecialtyId");
-
-                    b.ToTable("Specialties");
                 });
 
             modelBuilder.Entity("DoctorsOffice.Models.DoctorPatient", b =>
@@ -127,36 +94,12 @@ namespace DoctorsOffice.Migrations
                     b.Navigation("Patient");
                 });
 
-            modelBuilder.Entity("DoctorsOffice.Models.DoctorSpecialty", b =>
-                {
-                    b.HasOne("DoctorsOffice.Models.Doctor", "Doctor")
-                        .WithMany()
-                        .HasForeignKey("DoctorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("DoctorsOffice.Models.Specialty", "Specialty")
-                        .WithMany("JoinEntities")
-                        .HasForeignKey("SpecialtyId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Doctor");
-
-                    b.Navigation("Specialty");
-                });
-
             modelBuilder.Entity("DoctorsOffice.Models.Doctor", b =>
                 {
                     b.Navigation("JoinEntities");
                 });
 
             modelBuilder.Entity("DoctorsOffice.Models.Patient", b =>
-                {
-                    b.Navigation("JoinEntities");
-                });
-
-            modelBuilder.Entity("DoctorsOffice.Models.Specialty", b =>
                 {
                     b.Navigation("JoinEntities");
                 });
