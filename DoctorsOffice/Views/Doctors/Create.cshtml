@@ -5,7 +5,7 @@
 @model DoctorsOffice.Models.Doctor
 
 <h4>Add a doctor or whatever</h4>
-
+<p>@Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger", @style = "font-weight: 600;" })</p>
 @using (Html.BeginForm())
 {
   @Html.LabelFor(model => model.Name)

@@ -30,9 +30,16 @@ namespace DoctorsOffice.Controllers
     [HttpPost]
     public ActionResult Create(Patient patient)
     {
-      _db.Patients.Add(patient);
-      _db.SaveChanges();
-      return RedirectToAction("Index");
+      if (!ModelState.IsValid)
+      {
+        return View(patient);
+      }
+      else
+      {
+        _db.Patients.Add(patient);
+        _db.SaveChanges();
+        return RedirectToAction("Index");
+      }
     }
 
     public ActionResult Details(int id)
